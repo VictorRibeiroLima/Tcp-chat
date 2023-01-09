@@ -69,6 +69,10 @@ pub struct Client(
 );
 
 impl Client {
+    pub fn is_in_room(&self, room_name: &str) -> bool {
+        self.1.lock().unwrap().contains_key(room_name)
+    }
+
     pub fn new(connection: TcpStream) -> Client {
         Client(
             Mutex::new(connection),

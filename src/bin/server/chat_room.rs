@@ -33,7 +33,11 @@ impl ChatRoom {
 
 async fn subscribe(chat_name: Arc<String>, mut receiver: Receiver<String>, client: Arc<Client>) {
     loop {
-        let body = match receiver.recv().await {
+        let server_action = receiver.recv().await;
+        if !client.is_in_room(&chat_name) {
+            break;
+        }
+        let body = match server_action {
             Ok(message) => ServerAction::Message {
                 chat_name: chat_name.clone().to_string(),
                 message,
